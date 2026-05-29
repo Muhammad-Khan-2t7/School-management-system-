@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header i {
+            font-size: 60px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Styles */
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header i {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-header h4 {
+            font-size: 18px;
+            margin: 10px 0 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            padding-left: 35px;
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.2);
+            border-left: 4px solid white;
+        }
+
+        .sidebar-menu a i {
+            width: 25px;
+            margin-right: 12px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info i {
+            font-size: 40px;
+            color: #667eea;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stats-card i {
+            font-size: 40px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stats-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .table-responsive {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            margin: 0 3px;
+            border-radius: 8px;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -260px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: #667eea;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-school"></i>
+                <h2>School Management System</h2>
+                <p class="text-muted">Login to access your dashboard</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" class="form-control" id="loginEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            <hr class="my-4">
+            <div class="text-center">
+                <small class="text-muted">Demo Credentials:</small><br>
+                <small><strong>Admin:</strong> admin@school.com / admin123</small><br>
+                <small><strong>Receptionist:</strong> reception@school.com / rec123</small><br>
+                <small><strong>Teacher:</strong> muskanlaghari@gmail.com / 123456</small><br>
+                <small><strong>Student:</strong> student@school.com / student123</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboardContainer" style="display: none;"></div>
+
+    <script>
+        // Mock Database
+        let teachers = [
+            { id: 1, name: "Muskan", email: "muskanlaghari@gmail.com", phone: "03133225132", subject: "English", password: "123456" },
+            { id: 2, name: "Sanam", email: "sanamlaghari@gmail.com", phone: "03262339790", subject: "Math", password: "123456" },
+            { id: 3, name: "Hina", email: "hinashaikh@gmail.com", phone: "03262339760", subject: "Urdu", password: "123456" },
+            { id: 4, name: "Tahreem", email: "tahreemarain@gmail.com", phone: "03133225123", subject: "Computer", password: "123456" },
+            { id: 5, name: "Saeed", email: "saeedlaghari@gmail.com", phone: "03132254698", subject: "Science", password: "123456" },
+            { id: 6, name: "Irum", email: "irum@gmail.com", phone: "03245687910", subject: "Physics", password: "123456" }
+        ];
+
+        let students = [
+            { id: 1, name: "Sanam", fatherName: "Nazeer hussain", class: "9", phone: "03134456780", fees: 6000, email: "sanam@student.com", password: "123456" },
+            { id: 2, name: "Hina", fatherName: "Zanmeer", class: "5", phone: "0313445678", fees: 5000, email: "hina@student.com", password: "123456" },
+            { id: 3, name: "Ali", fatherName: "Sahobbat", class: "3", phone: "0323478980", fees: 4000, email: "ali@student.com", password: "123456" },
+            { id: 4, name: "Salamat", fatherName: "Nazeer", class: "6", phone: "0324455670", fees: 7000, email: "salamat@student.com", password: "123456" },
+            { id: 5, name: "Hussain", fatherName: "Arif", class: "7", phone: "0324456980", fees: 3000, email: "hussain@student.com", password: "123456" },
+            { id: 6, name: "Maseem", fatherName: "Sajjid", class: "2", phone: "03133224560", fees: 2000, email: "maseem@student.com", password: "123456" }
+        ];
+
+        let classes = [
+            { id: 1, name: "Class 1", teacherId: 1, teacherName: "Muskan" },
+            { id: 2, name: "Class 2", teacherId: 2, teacherName: "Sanam" },
+            { id: 3, name: "Class 3", teacherId: 3, teacherName: "Hina" },
+            { id: 4, name: "Class 4", teacherId: 4, teacherName: "Tahreem" },
+            { id: 5, name: "Class 5", teacherId: 5, teacherName: "Saeed" },
+            { id: 6, name: "Class 6", teacherId: 6, teacherName: "Irum" }
+        ];
+
+        let attendance = [];
+        let studyMaterials = [];
+        let assignments = [];
+        let feeChallans = [];
+
+        let currentUser = null;
+
+        // Login Handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Check for different user roles
+            if(email === 'admin@school.com' && password === 'admin123') {
+                currentUser = { id: 1, name: 'Admin', email: email, role: 'admin' };
+                loadDashboard('admin');
+            } 
+            else if(email === 'reception@school.com' && password === 'rec123') {
+                currentUser = { id: 2, name: 'Receptionist', email: email, role: 'receptionist' };
+                loadDashboard('receptionist');
+            }
+            else if(email === 'muskanlaghari@gmail.com' && password === '123456') {
+                currentUser = { id: 1, name: 'Muskan', email: email, role: 'teacher', subject: 'English' };
+                loadDashboard('teacher');
+            }
+            else if(email === 'student@school.com' && password === 'student123') {
+                currentUser = { id: 1, name: 'Sanam', email: email, role: 'student', class: '9' };
+                loadDashboard('student');
+            }
+            else {
+                alert('Invalid credentials! Please use the demo credentials shown below.');
+            }
+        });
+
+        function loadDashboard(role) {
+            document.getElementById('loginPage').style.display = 'none';
+            const container = document.getElementById('dashboardContainer');
+            container.style.display = 'block';
+            
+            let dashboardHTML = `
+                <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <div class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <i class="fas fa-school"></i>
+                        <h4>School Management System</h4>
+                        <p>Welcome, ${currentUser.name}</p>
+                    </div>
+                    <div class="sidebar-menu">
+            `;
+            
+            // Menu items based on role
+            if(role === 'admin') {
+                dashboardHTML += `
+                    <a href="#" onclick="showPage('dashboard')" class="active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" onclick="showPage('teachers')" data-page="teachers">
+                        <i class="fas fa-chalkboard-user"></i> Manage Teachers
+                    </a>
+                    <a href="#" onclick="showPage('students')" data-page="students">
+                        <i class="fas fa-users"></i> Manage Students
+                    </a>
+                    <a href="#" onclick="showPage('classes')" data-page="classes">
+                        <i class="fas fa-graduation-cap"></i> Classes
+                    </a>
+                    <a href="#" onclick="showPage('attendance')" data-page="attendance">
+                        <i class="fas fa-calendar-check"></i> Attendance
+                    </a>
+                    <a href="#" onclick="showPage('reports')" data-page="reports">
+                        <i class="fas fa-chart-line"></i> Reports
+                    </a>
+                `;
+            } else if(role === 'receptionist') {
+                dashboardHTML += `
+                    <a href="#" onclick="showPage('dashboard')" class="active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" onclick="showPage('admissions')" data-page="admissions">
+                        <i class="fas fa-user-plus"></i> Student Admissions
+                    </a>
+                    <a href="#" onclick="showPage('challans')" data-page="challans">
+                        <i class="fas fa-file-invoice"></i> Generate Challans
+                    </a>
+                    <a href="#" onclick="showPage('students')" data-page="students">
+                        <i class="fas fa-users"></i> View Students
+                    </a>
+                `;
+            } else if(role === 'teacher') {
+                dashboardHTML += `
+                    <a href="#" onclick="showPage('dashboard')" class="active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" onclick="showPage('myClasses')" data-page="myClasses">
+                        <i class="fas fa-chalkboard"></i> My Classes
+                    </a>
+                    <a href="#" onclick="showPage('myStudents')" data-page="myStudents">
+                        <i class="fas fa-users"></i> My Students
+                    </a>
+                    <a href="#" onclick="showPage('studyMaterial')" data-page="studyMaterial">
+                        <i class="fas fa-book"></i> Study Material
+                    </a>
+                    <a href="#" onclick="showPage('assignments')" data-page="assignments">
+                        <i class="fas fa-tasks"></i> Assignments
+                    </a>
+                    <a href="#" onclick="showPage('teacherAttendance')" data-page="teacherAttendance">
+                        <i class="fas fa-calendar-check"></i> Mark Attendance
+                    </a>
+                `;
+            } else if(role === 'student') {
+                dashboardHTML += `
+                    <a href="#" onclick="showPage('dashboard')" class="active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" onclick="showPage('myTeachers')" data-page="myTeachers">
+                        <i class="fas fa-chalkboard-user"></i> My Teachers
+                    </a>
+                    <a href="#" onclick="showPage('timetable')" data-page="timetable">
+                        <i class="fas fa-table"></i> Class Timetable
+                    </a>
+                    <a href="#" onclick="showPage('studyMaterials')" data-page="studyMaterials">
+                        <i class="fas fa-download"></i> Study Material
+                    </a>
+                    <a href="#" onclick="showPage('myAssignments')" data-page="myAssignments">
+                        <i class="fas fa-upload"></i> Assignments
+                    </a>
+                    <a href="#" onclick="showPage('myAttendance')" data-page="myAttendance">
+                        <i class="fas fa-calendar-alt"></i> My Attendance
+                    </a>
+                `;
+            }
+            
+            dashboardHTML += `
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="top-bar">
+                        <h4 class="page-title" id="pageTitle">Dashboard</h4>
+                        <div class="user-info">
+                            <i class="fas fa-user-circle"></i>
+                            <span>${currentUser.name}</span>
+                            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                        </div>
+                    </div>
+                    <div id="pageContent"></div>
+                </div>
+            `;
+            
+            container.innerHTML = dashboardHTML;
+            showPage('dashboard');
+        }
+
+        // Page rendering functions
+        function showPage(page) {
+            document.getElementById('pageTitle').innerText = page.charAt(0).toUpperCase() + page.slice(1);
+            
+            switch(page) {
+                case 'dashboard':
+                    showDashboard();
+                    break;
+                case 'teachers':
+                    showTeachers();
+                    break;
+                case 'students':
+                    showStudents();
+                    break;
+                case 'admissions':
+                    showAdmissions();
+                    break;
+                case 'challans':
+                    showChallans();
+                    break;
+                case 'myClasses':
+                    showMyClasses();
+                    break;
+                case 'myStudents':
+                    showMyStudents();
+                    break;
+              default:
+                    showDashboard();
+            }
+        }
+
+        function showDashboard() {
+            let html = `
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <i class="fas fa-chalkboard-user"></i>
+                            <h3>${teachers.length}</h3>
+                            <p>Total Teachers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <i class="fas fa-users"></i>
+                            <h3>${students.length}</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h3>${classes.length}</h3>
+                            <p>Total Classes</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <i class="fas fa-rupee-sign"></i>
+                            <h3>${students.reduce((sum, s) => sum + s.fees, 0).toLocaleString()}</h3>
+                            <p>Total Fees Collected</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Recent Students</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr><th>Name</th><th>Class</th><th>Fees</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            ${students.slice(0,5).map(s => `<tr><td>${s.name}</td><td>${s.class}</td><td>₹${s.fees}</td></tr>`).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Recent Teachers</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead><tr><th>Name</th><th>Subject</th><th>Phone</th></tr></thead>
+                                        <tbody>
+                                            ${teachers.slice(0,5).map(t => `<tr><td>${t.name}</td><td>${t.subject}</td><td>${t.phone}</td></tr>`).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        function showTeachers() {
+            let html = `
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Teachers List</span>
+                        <button class="btn btn-light btn-sm" onclick="addTeacher()"><i class="fas fa-plus"></i> Add Teacher</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Subject</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${teachers.map(t => `
+                                        <tr>
+                                            <td>${t.id}</td>
+                                            <td>${t.name}</td>
+                                            <td>${t.email}</td>
+                                            <td>${t.phone}</td>
+                                            <td>${t.subject}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" onclick="editTeacher(${t.id})"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteTeacher(${t.id})"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        function showStudents() {
+            let html = `
+                <div class="card">
+                    <div class="card-header">
+                        <span>Students List</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr><th>ID</th><th>Name</th><th>Father Name</th><th>Class</th><th>Phone</th><th>Fees</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${students.map(s => `
+                                        <tr>
+                                            <td>${s.id}</td>
+                                            <td>${s.name}</td>
+                                            <td>${s.fatherName}</td>
+                                            <td>${s.class}</td>
+                                            <td>${s.phone}</td>
+                                            <td>₹${s.fees}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-info" onclick="generateChallan(${s.id})"><i class="fas fa-print"></i> Challan</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        function showAdmissions() {
+            let html = `
+                <div class="card">
+                    <div class="card-header">Student Admission Form</div>
+                    <div class="card-body">
+                        <form id="admissionForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label>Student Name</label>
+                                    <input type="text" class="form-control" id="studentName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Father Name</label>
+                                    <input type="text" class="form-control" id="fatherName" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>Class</label>
+                                    <select class="form-control" id="studentClass">
+                                        ${[1,2,3,4,5,6,7,8,9,10].map(c => `<option value="${c}">Class ${c}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control" id="studentPhone" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>Fees Amount</label>
+                                    <input type="number" class="form-control" id="studentFees" required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" id="studentEmail" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary">Submit Admission</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+            
+            document.getElementById('admissionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newStudent = {
+                    id: students.length + 1,
+                    name: document.getElementById('studentName').value,
+                    fatherName: document.getElementById('fatherName').value,
+                    class: document.getElementById('studentClass').value,
+                    phone: document.getElementById('studentPhone').value,
+                    fees: parseFloat(document.getElementById('studentFees').value),
+                    email: document.getElementById('studentEmail').value,
+                    password: "123456"
+                };
+                students.push(newStudent);
+                alert('Student admitted successfully!');
+                this.reset();
+                showPage('students');
+            });
+        }
+
+        function showChallans() {
+            let html = `
+                <div class="card">
+                    <div class="card-header">Generate Fee Challan</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Select</th><th>Student Name</th><th>Class</th><th>Fees</th></tr></thead>
+                                <tbody>
+                                    ${students.map(s => `
+                                        <tr>
+                                            <td><input type="radio" name="challanStudent" value="${s.id}"></td>
+                                            <td>${s.name}</td>
+                                            <td>${s.class}</td>
+                                            <td>₹${s.fees}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                            <button class="btn btn-success" onclick="printChallan()"><i class="fas fa-print"></i> Generate & Print Challan</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="challanPreview" style="display:none;" class="mt-4"></div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        function generateChallan(studentId) {
+            const student = students.find(s => s.id == studentId);
+            const challanHTML = `
+                <div style="border: 2px solid #667eea; padding: 20px; border-radius: 10px; background: white;">
+                    <div style="text-align: center;">
+                        <h2>School Management System</h2>
+                        <h4>Fee Challan</h4>
+                        <hr>
+                        <table style="width: 100%; margin-top: 20px;">
+                            <tr><td><strong>Student Name:</strong></td><td>${student.name}</td></tr>
+                            <tr><td><strong>Father Name:</strong></td><td>${student.fatherName}</td></tr>
+                            <tr><td><strong>Class:</strong></td><td>${student.class}</td></tr>
+                            <tr><td><strong>Month:</strong></td><td>${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}</td></tr>
+                            <tr><td><strong>Fee Amount:</strong></td><td>₹${student.fees}</td></tr>
+                            <tr><td><strong>Due Date:</strong></td><td>${new Date(new Date().setMonth(new Date().getMonth() + 1)).toLocaleDateString()}</td></tr>
+                        </table>
+                        <hr>
+                        <p>Generated on: ${new Date().toLocaleString()}</p>
+                        <button onclick="window.print()" class="btn btn-primary">Print Challan</button>
+                    </div>
+                </div>
+            `;
+            const win = window.open();
+            win.document.write(challanHTML);
+            win.document.close();
+        }
+
+        function printChallan() {
+            const selected = document.querySelector('input[name="challanStudent"]:checked');
+            if(selected) {
+                generateChallan(selected.value);
+            } else {
+                alert('Please select a student first!');
+            }
+        }
+
+        function showMyClasses() {
+            const myClass = classes.find(c => c.teacherName === currentUser.name);
+            let html = `
+                <div class="card">
+                    <div class="card-header">My Classes</div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <strong>Class:</strong> ${myClass ? myClass.name : 'Not assigned'}
+                        </div>
+                        <h5>Timetable</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr><th>Day</th><th>Period 1</th><th>Period 2</th><th>Period 3</th><th>Period 4</th><th>Period 5</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Monday</td><td>${currentUser.subject}</td><td>Break</td><td>English</td><td>Lunch</td><td>Science</td></tr>
+                                    <tr><td>Tuesday</td><td>Math</td><td>${currentUser.subject}</td><td>Urdu</td><td>Lunch</td><td>Islamiat</td></tr>
+                                    <tr><td>Wednesday</td><td>${currentUser.subject}</td><td>Science</td><td>Break</td><td>Computer</td><td>Lunch</td></tr>
+                                    <tr><td>Thursday</td><td>English</td><td>Math</td><td>${currentUser.subject}</td><td>Lunch</td><td>Physics</td></tr>
+                                    <tr><td>Friday</td><td>${currentUser.subject}</td><td>Urdu</td><td>Break</td><td>Lunch</td><td>Sports</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        function showMyStudents() {
+            const myClass = classes.find(c => c.teacherName === currentUser.name);
+            const classStudents = students.filter(s => s.class == (myClass ? myClass.name.split(' ')[1] : ''));
+            
+            let html = `
+                <div class="card">
+                    <div class="card-header">My Students</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr><th>Name</th><th>Father Name</th><th>Phone</th><th>Attendance</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${classStudents.map(s => `
+                                        <tr>
+                                            <td>${s.name}</td>
+                                            <td>${s.fatherName}</td>
+                                            <td>${s.phone}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success" onclick="markAttendance(${s.id})">Mark Present</button>
+                                                <button class="btn btn-sm btn-danger" onclick="markAbsent(${s.id})">Mark Absent</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        function showMyTeachers() {
+            let html = `
+                <div class="card">
+                    <div class="card-header">My Teachers</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Name</th><th>Subject</th><th>Email</th><th>Phone</th></tr></thead>
+                                <tbody>
+                                    ${teachers.map(t => `
+                                        <tr>
+                                            <td>${t.name}</td
+                                            <td>${t.subject}</td
+                                            <td>${t.email}</td
+                                            <td>${t.phone}</td
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('pageContent').innerHTML = html;
+        }
+
+        // Helper functions
+        function addTeacher() {
+            const name = prompt('Enter teacher name:');
+            const email = prompt('Enter email:');
+            const phone = prompt('Enter phone:');
+            const subject = prompt('Enter subject:');
+            if(name && email && phone && subject) {
+                teachers.push({
+                    id: teachers.length + 1,
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    subject: subject,
+                    password: '123456'
+                });
+                alert('Teacher added successfully!');
+                showPage('teachers');
+            }
+        }
+
+        function editTeacher(id) {
+            const teacher = teachers.find(t => t.id === id);
+            const newName = prompt('Edit name:', teacher.name);
+            if(newName) {
+                teacher.name = newName;
+                alert('Teacher updated!');
+                showPage('teachers');
+            }
+        }
+
+        function deleteTeacher(id) {
+            if(confirm('Are you sure you want to delete this teacher?')) {
+                teachers = teachers.filter(t => t.id !== id);
+                alert('Teacher deleted!');
+                showPage('teachers');
+            }
+        }
+
+        function markAttendance(studentId) {
+            alert(`Attendance marked present for student ID: ${studentId}`);
+        }
+
+        function markAbsent(studentId) {
+            alert(`Attendance marked absent for student ID: ${studentId}`);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+    // Make functions global
+        window.addTeacher = addTeacher;
+        window.editTeacher = editTeacher;
+        window.deleteTeacher = deleteTeacher;
+        window.generateChallan = generateChallan;
+        window.printChallan = printChallan;
+        window.showPage = showPage;
+        window.logout = logout;
+        window.toggleSidebar = toggleSidebar;
+        window.markAttendance = markAttendance;
+        window.markAbsent = markAbsent;
+    </script>
+</body>
+</html>
